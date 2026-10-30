@@ -1,0 +1,11 @@
+{
+  "app_title": "Sheikh Amjad Time Management",
+  "status_completed": "Completed",
+  "status_partial": "Partially Completed / Excuse",
+  "status_lazy": "Not Done (Laziness)",
+  "period_morning": "Morning Period (Fajr - Dhuhr)",
+  "period_midday": "Midday Period (Dhuhr - Maghrib)",
+  "period_evening": "Evening Period (Maghrib - Late Night)",
+  "hide_admin_note": "Private Notes (Hidden from Admin)",
+  "friday_rest_title": "Friday Rest & Family Time"
+}

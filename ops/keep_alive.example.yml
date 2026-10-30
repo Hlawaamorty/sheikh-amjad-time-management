@@ -1,0 +1,26 @@
+# مثال اختياري فقط. لا يضمن هذا منع Supabase من إيقاف مشروع مجاني قليل النشاط.
+# إذا استخدمته، ضَع SUPABASE_URL وSUPABASE_ANON_KEY في GitHub Actions Secrets.
+# شغّل الـ workflow من الفرع الافتراضي في المستودع.
+name: Optional Supabase Activity Check
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 4 */4 * *'
+jobs:
+  activity-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call harmless healthcheck RPC
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_ANON_KEY"
+          curl --fail-with-body --silent --show-error \
+            "$SUPABASE_URL/rest/v1/rpc/healthcheck" \
+            -X POST \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            --data '{}'

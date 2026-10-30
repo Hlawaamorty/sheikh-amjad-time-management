@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark" data-font-level="3">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0D1B2A">
+  <title>منظومة إدارة الوقت والمهام</title>
+  <link rel="stylesheet" href="assets/css/design-tokens.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body>
+  <div class="bg-orb orb-one" aria-hidden="true"></div><div class="bg-orb orb-two" aria-hidden="true"></div>
+  <main class="app-frame">
+    <section id="login-view" class="login-wrap">
+      <div class="brand-mark">و</div>
+      <p class="eyebrow">إدارة واعية للوقت</p>
+      <h1>منظومة إدارة الوقت والمهام</h1>
+      <p class="muted intro">سجّل الدخول لمتابعة جدولك اليومي والأسبوعي.</p>
+      <form id="login-form" class="stack-form">
+        <label for="login-email">البريد الإلكتروني</label>
+        <input id="login-email" name="email" type="email" autocomplete="username" required placeholder="name@example.com">
+        <label for="login-password">كلمة المرور</label>
+        <div class="password-row"><input id="login-password" name="password" type="password" autocomplete="current-password" required><button id="toggle-password" class="icon-button" type="button" aria-label="إظهار كلمة المرور">◉</button></div>
+        <button class="button primary full" type="submit">تسجيل الدخول</button>
+        <p id="login-error" class="error-message" role="alert" hidden></p>
+      </form>
+      <p class="tiny muted">الحسابات تُنشأ من لوحة Supabase؛ لا يوجد تسجيل ذاتي مفتوح في هذه النسخة.</p>
+    </section>
+
+    <section id="app-view" hidden>
+      <header class="topbar">
+        <div class="brand-lockup"><div class="brand-mark small">و</div><div><strong>إدارة الوقت</strong><span id="role-label" class="tiny muted">المستخدم</span></div></div>
+        <div class="topbar-actions"><span id="current-user" class="user-email"></span><button id="logout-button" class="button ghost small-button">تسجيل الخروج</button></div>
+      </header>
+      <nav class="main-nav" aria-label="التنقل الرئيسي">
+        <button class="nav-button active" data-panel="daily-panel">المهام اليومية</button>
+        <button class="nav-button" data-panel="review-panel">المراجعة الأسبوعية</button>
+        <button class="nav-button" data-panel="tickets-panel">التواصل</button>
+        <button class="nav-button" data-panel="settings-panel">الإعدادات</button>
+        <button class="nav-button admin-only" data-panel="admin-panel" hidden>لوحة المسؤول</button>
+      </nav>
+
+      <section id="daily-panel" class="panel active-panel">
+        <div class="page-heading"><div><p class="eyebrow">خطوة واحدة في كل مرة</p><h2>جدول اليوم</h2><p id="week-label" class="muted"></p></div><div class="date-pill" id="today-label"></div></div>
+        <div class="day-strip" id="day-strip" aria-label="اختيار اليوم"></div>
+        <div id="friday-card" class="friday-card" hidden><div class="friday-icon">✦</div><div><strong>الجمعة والراحة الأسبوعية</strong><p id="friday-message">خصص وقتًا للراحة والأسرة والعبادات.</p></div></div>
+        <div class="summary-row" id="task-summary"></div>
+        <div id="task-list" class="task-list"><div class="empty-state">حمّل المهام لعرضها هنا.</div></div>
+        <section class="audio-card card">
+          <div class="section-heading"><div><p class="eyebrow">مساحة شخصية</p><h3>ملاحظة صوتية لليوم</h3></div><span class="privacy-badge">🔒 خاصة بك</span></div>
+          <p class="muted small-copy">التسجيل يُحفظ في مساحة خاصة بالمستخدم ولا يظهر في لوحة المسؤول.</p>
+          <div class="audio-controls"><button id="audio-start" class="button primary">● بدء التسجيل</button><button id="audio-stop" class="button secondary" disabled>إيقاف</button><button id="audio-upload" class="button ghost" disabled>حفظ التسجيل</button><span id="audio-timer" class="timer">00:00</span></div>
+          <audio id="audio-preview" controls hidden></audio><p id="audio-message" class="inline-message" aria-live="polite"></p>
+        </section>
+      </section>
+
+      <section id="review-panel" class="panel" hidden>
+        <div class="page-heading"><div><p class="eyebrow">مراجعة بلا جلد للذات</p><h2>المراجعة الأسبوعية</h2><p class="muted">اكتب إجاباتك لنفسك، ولن تظهر للمسؤول.</p></div></div>
+        <form id="review-form" class="card stack-form">
+          <label for="review-accomplished">1. ما أهم المهام التي أنجزتها؟</label><textarea id="review-accomplished" rows="3"></textarea>
+          <label for="review-reasons">2. ما الذي ساعدك على إنجازها؟</label><textarea id="review-reasons" rows="3"></textarea>
+          <label for="review-unaccomplished">3. ما الذي لم تنجزه؟</label><textarea id="review-unaccomplished" rows="3"></textarea>
+          <label for="review-unreasons">4. ما أسباب عدم الإنجاز؟</label><textarea id="review-unreasons" rows="3"></textarea>
+          <label for="review-improve">5. ما الذي تريد تحسينه؟</label><textarea id="review-improve" rows="3"></textarea>
+          <label for="review-next">6. ما خطتك للأسبوع القادم؟</label><textarea id="review-next" rows="3"></textarea>
+          <button class="button primary" type="submit">حفظ المراجعة</button><p id="review-message" class="inline-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="tickets-panel" class="panel" hidden>
+        <div class="page-heading"><div><p class="eyebrow">طلب أو استفسار</p><h2>التواصل مع المسؤول</h2><p class="muted">المرفقات مرتبطة بالتذكرة ويُسمح بالوصول إليها بحسب الصلاحيات.</p></div></div>
+        <form id="ticket-form" class="card stack-form">
+          <label for="ticket-subject">عنوان الطلب</label><input id="ticket-subject" maxlength="255" required>
+          <label for="ticket-body">التفاصيل</label><textarea id="ticket-body" rows="4" required></textarea>
+          <label for="ticket-files">مرفقات (صور أو فيديو أو صوت أو مستند)</label><input id="ticket-files" type="file" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt">
+          <p class="tiny muted">ارفع ملفات صغيرة قدر الإمكان للحفاظ على سعة الخطة المجانية.</p>
+          <button class="button primary" type="submit">إرسال الطلب</button><p id="ticket-message" class="inline-message" aria-live="polite"></p>
+        </form>
+        <div class="section-heading list-heading"><h3>التذاكر السابقة</h3><button id="refresh-tickets" class="button ghost small-button">تحديث</button></div>
+        <div id="ticket-list" class="ticket-list"><div class="empty-state">لا توجد تذاكر معروضة.</div></div>
+      </section>
+
+      <section id="settings-panel" class="panel" hidden>
+        <div class="page-heading"><div><p class="eyebrow">تخصيص التجربة</p><h2>الإعدادات وسهولة الاستخدام</h2></div></div>
+        <form id="settings-form" class="card stack-form">
+          <label for="setting-language">لغة الواجهة</label><select id="setting-language"><option value="ar_FA">العربية الفصحى</option><option value="ar_EG">العربية المصرية</option><option value="en_US">English</option></select>
+          <label for="setting-theme">المظهر</label><select id="setting-theme"><option value="DARK">داكن</option><option value="LIGHT">فاتح</option><option value="SYSTEM">حسب الجهاز</option></select>
+          <label for="setting-font">حجم الخط</label><div class="range-row"><input id="setting-font" type="range" min="1" max="6" step="1" value="3"><output id="font-output">3 / 6</output></div>
+          <button class="button primary" type="submit">حفظ الإعدادات</button><p id="settings-message" class="inline-message" aria-live="polite"></p>
+        </form>
+        <div class="notice-card"><strong>تنبيه خصوصية</strong><p>لا تضع مفاتيح الخدمة السرية (service_role) في ملفات المتصفح. التطبيق يستخدم مفتاح anon/publishable فقط، وتُفرض الصلاحيات من قاعدة البيانات.</p></div>
+      </section>
+
+      <section id="admin-panel" class="panel" hidden>
+        <div class="page-heading"><div><p class="eyebrow">إدارة الجدول</p><h2>لوحة المسؤول</h2><p class="muted">تظهر هنا البيانات التشغيلية والتذاكر، وليس الملاحظات الخاصة أو المراجعات الأسبوعية أو التسجيلات الصوتية.</p></div></div>
+        <div class="admin-stats" id="admin-stats"></div>
+        <form id="week-form" class="card stack-form compact-form">
+          <h3>إنشاء أسبوع جديد</h3><label for="week-start-date">تاريخ بداية الأسبوع (السبت)</label><input id="week-start-date" type="date" required><button class="button secondary" type="submit">إنشاء أسبوع</button><p id="week-message" class="inline-message"></p>
+        </form>
+        <form id="task-form" class="card stack-form compact-form">
+          <h3>إضافة مهمة <span class="tiny muted">(حتى 100 مهمة في اليوم)</span></h3>
+          <div class="form-grid"><div><label for="task-week">الأسبوع</label><select id="task-week" required></select></div><div><label for="task-user">المستفيد</label><select id="task-user" required></select></div>
+          <div><label for="task-day">اليوم</label><select id="task-day"><option value="0">السبت</option><option value="1">الأحد</option><option value="2">الاثنين</option><option value="3">الثلاثاء</option><option value="4">الأربعاء</option><option value="5">الخميس</option><option value="6">الجمعة</option></select></div>
+          <div><label for="task-period">الفترة</label><select id="task-period"><option value="1">الصباح</option><option value="2">منتصف اليوم</option><option value="3">المساء</option></select></div>
+          <div class="span-two"><label for="task-title">اسم المهمة</label><input id="task-title" maxlength="255" required></div>
+          <div class="span-two"><label for="task-instructions">تعليمات المسؤول</label><textarea id="task-instructions" rows="2"></textarea></div>
+          <div><label for="task-start">وقت البداية</label><input id="task-start" type="time" required value="09:00"></div><div><label for="task-end">وقت النهاية</label><input id="task-end" type="time" required value="09:30"></div>
+          <div class="span-two checkbox-line"><input id="task-time-editable" type="checkbox"><label for="task-time-editable">السماح للمستفيد بتعديل التوقيت (يحتاج استكمال الواجهة الخلفية قبل تفعيله فعليًا)</label></div></div>
+          <button class="button primary" type="submit">＋ إضافة المهمة</button><p id="task-message" class="inline-message" aria-live="polite"></p>
+        </form>
+        <div class="section-heading list-heading"><h3>المهام المسجلة</h3><button id="refresh-admin" class="button ghost small-button">تحديث</button></div>
+        <div id="admin-task-list" class="table-wrap"></div>
+        <div class="section-heading list-heading"><h3>تذاكر التواصل</h3></div><div id="admin-ticket-list" class="ticket-list"></div>
+      </section>
+      <footer class="footer-note">منظومة شخصية لإدارة الوقت · احفظ نسخة احتياطية دورية من البيانات المهمة.</footer>
+    </section>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </main>
+</body>
+</html>

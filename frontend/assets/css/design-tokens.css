@@ -1,0 +1,15 @@
+/* الألوان الأصلية المذكورة في وثيقة المواصفات */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-primary: #0D1B2A; --surface-card: #1B263B; --border-subtle: #415A77;
+  --text-primary: #E0E1DD; --text-secondary: #778DA9;
+  --status-success: #2EC4B6; --status-partial: #6C757D; --status-danger: #E63946;
+  --shadow-card: 0 18px 50px rgba(0,0,0,.18);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #F8FAFC; --surface-card: #FFFFFF; --border-subtle: #E2E8F0;
+  --text-primary: #0F172A; --text-secondary: #475569;
+  --status-success: #0D9488; --status-partial: #64748B; --status-danger: #DC2626;
+  --shadow-card: 0 18px 50px rgba(15,23,42,.07);
+}

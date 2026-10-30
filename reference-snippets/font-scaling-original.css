@@ -1,0 +1,12 @@
+/* مقتطف CSS الأصلي الوارد في الوثيقة */
+:root[data-font-level="1"] { --font-scale: 0.875; }
+:root[data-font-level="2"] { --font-scale: 0.9375; }
+:root[data-font-level="3"] { --font-scale: 1.0; }
+:root[data-font-level="4"] { --font-scale: 1.125; }
+:root[data-font-level="5"] { --font-scale: 1.25; }
+:root[data-font-level="6"] { --font-scale: 1.375; }
+
+body {
+    font-size: calc(1rem * var(--font-scale));
+    line-height: 1.6;
+}
